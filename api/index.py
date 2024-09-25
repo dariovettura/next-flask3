@@ -1,6 +1,5 @@
-# app.py or main.py
+
 from flask import Flask
-from api.index import hello_world  # Your existing endpoint
 from api.test import test_bp        # The new endpoint
 
 app = Flask(__name__)
