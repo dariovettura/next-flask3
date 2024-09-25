@@ -1,6 +1,6 @@
 # app.py o main.py
 from flask import Flask
-from api.test import test_bp  # Importa il blueprint per il test
+from test import test_bp  # Importa il blueprint per il test
 
 app = Flask(__name__)
 
