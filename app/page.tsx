@@ -11,7 +11,7 @@ export default function Home() {
       e.preventDefault();
 
       try {
-          const res = await fetch('/api/test', {
+          const res = await fetch('/api/python', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
