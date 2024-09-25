@@ -3,7 +3,7 @@ from .test import test_bp
 
 app = Flask(__name__)
 
-
+app.register_blueprint(test_bp)
 
 @app.route("/api/python", methods=["GET", "POST"])
 def hello_world():
