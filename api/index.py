@@ -1,15 +1,16 @@
-# api/index.py
-from flask import Flask, request, jsonify
-from .test import test_blueprint 
+# app.py or main.py
+from flask import Flask
+from api.index import hello_world  # Your existing endpoint
+from api.test import test_bp        # The new endpoint
 
 app = Flask(__name__)
 
+# Register the test blueprint
+app.register_blueprint(test_bp)
+
 @app.route("/api/python", methods=["GET", "POST"])
 def hello_world():
-    return "<p>Ciao, World!</p>"
-
-# Registra il blueprint
-app.register_blueprint(test_blueprint)
+   return "Hello, World!"
 
 if __name__ == "__main__":
     app.run(debug=True)

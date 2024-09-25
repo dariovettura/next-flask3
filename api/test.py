@@ -1,16 +1,17 @@
+# api/test.py
 from flask import Blueprint, request, jsonify
 
-test_blueprint = Blueprint('test_blueprint', __name__)
+# Create a new blueprint for the test endpoint
+test_bp = Blueprint('test', __name__)
 
-@test_blueprint.route("/api/test", methods=["GET","POST"])
-def hello_test():
-    # Ottieni i dati JSON dalla richiesta
+@test_bp.route("/api/test", methods=["GET", "POST"])
+def test_endpoint():
     data = request.get_json()
     
-    # Assicurati che ci siano dati
+    # Check if data is received
     if data:
-        # Aggiungi "ricevuto" all'input
-        response = f"{data.get('input', '')} ricevuto"
+        # Process input or simply return a message
+        response = f"Test endpoint received: {data.get('input', '')}"
         return jsonify({"response": response}), 200
     else:
-        return jsonify({"error": "Nessun dato ricevuto"}), 400
+        return jsonify({"error": "No data received"}), 400
