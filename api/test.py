@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 
 test_blueprint = Blueprint('test_blueprint', __name__)
 
-@test_blueprint.route("/api/test", methods=['POST'])
+@test_blueprint.route("/api/test", methods=["GET","POST"])
 def hello_test():
     # Ottieni i dati JSON dalla richiesta
     data = request.get_json()
