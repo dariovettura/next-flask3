@@ -16,7 +16,7 @@ export default function Home() {
               headers: {
                   'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ input }),
+              body: JSON.stringify({ link: input  }),
           });
 
           if (!res.ok) {
@@ -24,7 +24,7 @@ export default function Home() {
           }
 
           const data = await res.json();
-          setResponse(data.response);
+          setResponse(JSON.stringify(data.rooms, null, 2));
       } catch (error) {
           console.error(error);
           setResponse('Errore nella richiesta');
