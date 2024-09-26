@@ -39,7 +39,7 @@ def test():
     print(f"Link completo costruito: {full_url}")  # Stampa per debug
 
     # Effettua la richiesta GET al link costruito
-    response = requests.get(link)
+    response = requests.get(full_url)
     
     if response.status_code == 200:
         # Parsing del contenuto HTML con BeautifulSoup
