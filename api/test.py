@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import requests
 from bs4 import BeautifulSoup
-import urllib.parse  # Import per codificare l'URL
+import urllib.parse  
 
 # Creazione del blueprint per il nuovo endpoint
 test_bp = Blueprint('test', __name__)
