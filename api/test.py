@@ -6,40 +6,35 @@ import urllib.parse  # Import per codificare l'URL
 # Creazione del blueprint per il nuovo endpoint
 test_bp = Blueprint('test', __name__)
 
-@test_bp.route("/api/test", methods=["GET", "POST"])
+@test_bp.route("/api/test", methods=["POST"])
 def test():
-    # Controlla se è una richiesta GET o POST
-    if request.method == "GET":
-        # Ottieni il parametro 'link' dall'URL
-        link = request.args.get('link')
-        pax = request.args.get('pax')
-        codice = request.args.get('codice')
-        checkout = request.args.get('checkout')
-    elif request.method == "POST":
-        # Ottieni i dati JSON dal corpo della richiesta
-        data = request.get_json()
-        link = data.get('link')
-        pax = data.get('pax')
-        codice = data.get('codice')
-        checkout = data.get('checkout')
+    # Ottieni i dati JSON dal corpo della richiesta
+    data = request.get_json()
+    
+    # Estrai i parametri dal JSON
+    checkin = data.get('checkin')
+    checkout = data.get('checkout')
+    pax = data.get('pax')
 
-    # Verifica che il link esista
-    if not link:
-        return jsonify({"error": "Nessun link fornito"}), 400
+    # Controlla che tutti i parametri siano presenti
+    if not checkin or not checkout or not pax:
+        return jsonify({"error": "Parametri mancanti: checkin, checkout e pax sono richiesti."}), 400
 
-    # Costruisci i parametri per l'URL
+    # Costruisci il link con i parametri forniti
+    base_url = "https://book.octorate.com/octobook/site/reservation/result.xhtml"
     query_params = {
+        "checkin": checkin,
+        "checkout": checkout,
         "pax": pax,
-        "codice": codice,
-        "checkout": checkout
+        "codice": "92196"  # codice fisso
     }
 
     # Aggiungi i parametri di query all'URL
-    full_url = f"{link}&{urllib.parse.urlencode(query_params)}"
+    full_url = f"{base_url}?{urllib.parse.urlencode(query_params)}"
     print(f"Link completo costruito: {full_url}")  # Stampa per debug
 
     # Effettua la richiesta GET al link costruito
-    response = requests.get(link)
+    response = requests.get(full_url)
     
     if response.status_code == 200:
         # Parsing del contenuto HTML con BeautifulSoup
@@ -63,10 +58,12 @@ def test():
             room_info['size'] = section.find('span').text.strip() if section.find('span') else 'N/A'
 
             # Estrai i servizi dal paragrafo (p) che contiene immagini e testo
-            services_paragraph = section.find('p')
-            if services_paragraph:
-                services = services_paragraph.text.strip().split(" - ")
-                room_info['services'] = [service.strip() for service in services]
+            services_paragraphs = section.find_all('p')
+            services = []
+            if services_paragraphs:
+                for serv in services_paragraphs:
+                    services.extend([service.strip() for service in serv.text.strip().split(" - ") if service.strip()])
+                room_info['services'] = list(set(services))  # Rimuovi duplicati
             else:
                 room_info['services'] = []
 

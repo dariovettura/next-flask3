@@ -1,14 +1,19 @@
 'use client'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
+
 
 export default function Home() {
-  const [input, setInput] = useState('');
+  const [checkin, setCheckin] = useState('');
+  const [checkout, setCheckout] = useState('');
+  const [pax, setPax] = useState('');
   const [response, setResponse] = useState('');
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e: any) => {
       e.preventDefault();
+
+      // Costruisci il link utilizzando i parametri forniti
+      const link = `https://book.octorate.com/octobook/site/reservation/result.xhtml?checkin=${checkin}&checkout=${checkout}&pax=${pax}`;
 
       try {
           const res = await fetch('/api/test', {
@@ -16,7 +21,7 @@ export default function Home() {
               headers: {
                   'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ link: input  }),
+              body: JSON.stringify({ link }), // Passa il link costruito
           });
 
           if (!res.ok) {
@@ -36,17 +41,29 @@ export default function Home() {
           <h1>Invia Input</h1>
           <form onSubmit={handleSubmit}>
               <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Scrivi qualcosa..."
+                  type="date"
+                  value={checkin}
+                  onChange={(e) => setCheckin(e.target.value)}
+                  placeholder="Check-in"
+                  required
+              />
+              <input
+                  type="date"
+                  value={checkout}
+                  onChange={(e) => setCheckout(e.target.value)}
+                  placeholder="Check-out"
+                  required
+              />
+              <input
+                  type="number"
+                  value={pax}
+                  onChange={(e) => setPax(e.target.value)}
+                  placeholder="Numero di persone"
                   required
               />
               <button type="submit">Invia</button>
           </form>
-          {response && <p>Risposta: {response}</p>}
+          {response && <pre>Risposta: {response}</pre>} {/* Usando <pre> per formattazione */}
       </div>
   );
 };
-
-
