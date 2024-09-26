@@ -37,33 +37,53 @@ export default function Home() {
   };
 
   return (
-      <div>
-          <h1>Invia Input</h1>
-          <form onSubmit={handleSubmit}>
-              <input
-                  type="date"
-                  value={checkin}
-                  onChange={(e) => setCheckin(e.target.value)}
-                  placeholder="Check-in"
-                  required
-              />
-              <input
-                  type="date"
-                  value={checkout}
-                  onChange={(e) => setCheckout(e.target.value)}
-                  placeholder="Check-out"
-                  required
-              />
-              <input
-                  type="number"
-                  value={pax}
-                  onChange={(e) => setPax(e.target.value)}
-                  placeholder="Numero di persone"
-                  required
-              />
-              <button type="submit">Invia</button>
-          </form>
-          {response && <pre>Risposta: {response}</pre>} {/* Usando <pre> per formattazione */}
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+    <h1 className="text-3xl font-bold mb-6">Invia Input</h1>
+    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 py-6 mb-4">
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="checkin">
+                Check-in
+            </label>
+            <input
+                type="date"
+                value={checkin}
+                onChange={(e) => setCheckin(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+        </div>
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="checkout">
+                Check-out
+            </label>
+            <input
+                type="date"
+                value={checkout}
+                onChange={(e) => setCheckout(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+        </div>
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pax">
+                Numero di persone
+            </label>
+            <input
+                type="number"
+                value={pax}
+                onChange={(e) => setPax(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+        </div>
+        <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+        >
+            Invia
+        </button>
+    </form>
+    {response && <pre className="bg-gray-200 p-4 rounded">{response}</pre>} {/* Usando <pre> per formattazione */}
+</div>
   );
 };
