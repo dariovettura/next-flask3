@@ -21,7 +21,7 @@ export default function Home() {
               headers: {
                   'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ link }), // Passa il link costruito
+              body: JSON.stringify({ checkin,checkout,pax }), // Passa il link costruito
           });
 
           if (!res.ok) {
