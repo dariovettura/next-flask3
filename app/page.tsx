@@ -83,7 +83,7 @@ export default function Home() {
             Invia
         </button>
     </form>
-    {response && <pre className="bg-gray-200 p-4 rounded">{response}</pre>} {/* Usando <pre> per formattazione */}
+    {response && <div className="bg-gray-200 p-4 rounded">{response}</div>} 
 </div>
   );
 };
