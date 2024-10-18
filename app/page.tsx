@@ -1,13 +1,13 @@
 'use client'
 import { useState } from "react";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc } from "firebase/firestore"; // Usa setDoc per usare l'UID come ID del documento
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 // Configurazione Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCWUMESbBDOk-Z2XMQHYXKA55fdC7uxYOI",
+  apiKey: process.env.NEXT_PUBLIC_API,
   authDomain: "omega-point-2.firebaseapp.com",
   projectId: "omega-point-2",
   storageBucket: "omega-point-2.appspot.com",
@@ -20,7 +20,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const storage = getStorage(app); // Inizializza Firebase Storage
+const storage = getStorage(app);
 
 const UserForm = () => {
   const [formData, setFormData] = useState({
@@ -29,7 +29,7 @@ const UserForm = () => {
     referralcode: "",
     username: "",
   });
-  const [serverMessage, setServerMessage] = useState(""); // Stato per i messaggi del server
+  const [serverMessage, setServerMessage] = useState(""); // Stato per i messaggi dal server
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -45,7 +45,7 @@ const UserForm = () => {
     try {
       setServerMessage("Iniziando la registrazione...");
 
-      // Autentica l'utente
+      // Autentica l'utente con Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         formData.email,
@@ -55,9 +55,8 @@ const UserForm = () => {
 
       setServerMessage("Utente registrato con successo!");
 
-      // Salva i dati nella raccolta esistente "UsersData"
-      await addDoc(collection(db, "UsersData"), {
-        uid: user.uid, // UID dell'utente
+      // Salva i dati dell'utente nella raccolta "UsersData" con l'UID come ID del documento
+      await setDoc(doc(db, "UsersData", user.uid), {
         email: formData.email,
         username: formData.username,
         referralcode: formData.referralcode,
@@ -65,13 +64,13 @@ const UserForm = () => {
 
       setServerMessage("Dati utente salvati con successo in Firestore!");
 
-      // Ottieni l'URL di download per il file PDF dal Firebase Storage
+      // Ottieni l'URL di download del file PDF da Firebase Storage
       const fileRef = ref(storage, "Dieta.pdf"); // Percorso del file
       const url = await getDownloadURL(fileRef);
 
       setServerMessage("Download URL ottenuto! Il download inizierà automaticamente...");
 
-      // Crea un link temporaneo e attiva il download automatico
+      // Crea un link temporaneo per attivare il download automatico
       const a = document.createElement("a");
       a.href = url;
       a.download = "Dieta.pdf";
@@ -79,8 +78,10 @@ const UserForm = () => {
       a.click();
       document.body.removeChild(a);
 
+      // Reimposta il modulo
       setFormData({ email: "", password: "", referralcode: "", username: "" });
-    } catch (error:any) {
+
+    } catch (error: any) {
       console.error("Error registering user or adding document: ", error);
       setServerMessage(`Errore: ${error.message}`);
     }
